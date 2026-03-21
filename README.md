@@ -1,10 +1,6 @@
 # Ultrapowers
 
-Customized workflow skills and agents for my development
-
-[superpowers](https://github.com/obra/superpowers)
-
- but tailored specifically for **my** use case.
+Customized workflow skills and agents for my development using [superpowers](https://github.com/obra/superpowers) but tailored specifically for **my** use case. You can use it freely btw.
 
 ## Overview
 
