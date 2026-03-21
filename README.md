@@ -1,6 +1,10 @@
 # Ultrapowers
 
-Customized workflow skills and agents for development—similar to superpowers but tailored specifically for this use case.
+Customized workflow skills and agents for my development
+
+[superpowers]: https://github.com/obra/superpowers
+
+ but tailored specifically for **my** use case.
 
 ## Overview
 
@@ -60,55 +64,15 @@ systematic-debugging → bug-hunter agent → (return to relevant workflow)
 2. **bug-hunter** - Specialist agent to help with debugging
 3. Once fix is ready, return to appropriate workflow (quick-iteration or full)
 
-## Directory Structure
-
-```
-ultrapowers/
-├── skills/                    # Available skills
-│   ├── brainstorming/
-│   │   └── SKILL.md
-│   ├── writing-plans/
-│   │   └── SKILL.md
-│   ├── adversarial-review/
-│   │   └── SKILL.md
-│   ├── requesting-code-review/
-│   │   ├── SKILL.md
-│   │   └── code-reviewer.md     # Template for dispatch
-│   ├── quick-iteration/
-│   │   ├── SKILL.md
-│   │   └── references/
-│   ├── skillkit/
-│   │   ├── SKILL.md
-│   │   ├── knowledge/           # Knowledge base for skillkit
-│   │   ├── scripts/            # Python scripts for creation/validation
-│   │   ├── references/
-│   │   └── tests/
-│   ├── subagent-driven-development/
-│   │   ├── SKILL.md
-│   │   ├── implementer-prompt.md
-│   │   ├── spec-reviewer-prompt.md
-│   │   └── code-quality-reviewer-prompt.md
-│   ├── systematic-debugging/
-│   │   ├── SKILL.md
-│   │   └── *.md                # Supporting documents
-│   ├── releasing/
-│   │   ├── SKILL.md
-│   │   └── references/
-│   └── ...
-└── agents/                     # Subagent definitions
-    ├── code-reviewer.md
-    └── bug-hunter.md
-```
-
 ## Usage
 
 ### Invoking Skills
 
 ```bash
 # Direct from Claude Code
-/Skill brainstorming
-/Skill writing-plans
-/Skill quick-iteration
+/brainstorming
+/writing-plans
+/quick-iteration
 ```
 
 Or via the Skill tool:
@@ -138,75 +102,13 @@ Or via the Skill tool:
 - Find root cause first
 - Then propose fix
 
-## Usage Examples
-
-### Example 1: New Feature
-
-```
-User: "I want to build a PDF export feature for reports"
-
-Agent: [invoke brainstorming]
-- Clarify requirements: PDF format? what data? destination?
-- Propose 2-3 approaches
-- Present design
-- User approves
-
-[invoke writing-plans]
-- Create implementation plan with detailed tasks
-
-[invoke subagent-driven-development]
-- Dispatch implementer per task
-- Review spec compliance + code quality after each task
-
-[invoke requesting-code-review]
-- Final review before merge
-
-[invoke finishing-a-development-branch]
-- Decide: PR? merge? branch management?
-```
-
-### Example 2: Quick Fix
-
-```
-User: "Add email validation to registration form"
-
-Agent: [invoke quick-iteration]
-- Step 1: Capture intent - validate email format
-- Step 2: Write brief plan (3-5 bullets)
-- Step 3: Dispatch subagent reviewer
-- Step 4: Fix issues from review
-- Step 5: Implement
-
-[invoke requesting-code-review]
-- Review before commit
-```
-
-### Example 3: Debugging
-
-```
-User: "API keeps returning 500"
-
-Agent: [invoke systematic-debugging]
-- Phase 1: Root cause investigation
-  - Read error messages carefully
-  - Reproduce consistently
-  - Check recent changes
-  - Gather evidence
-
-- Phase 2: Hypothesis formation
-- Phase 3: Fix validation
-- Phase 4: Prevention
-
-[If more help needed, dispatch bug-hunter agent]
-```
-
 ## Superpowers Integration
 
 Some skills in this repo are customizations of existing superpowers skills:
 
 | Ultrapowers Skill | Original Superpowers |
 |-------------------|---------------------|
-| `brainstorming` | `superpowers:brainstorming` |
+| `brainstorming` (enhanced with identify hypothese phase) | `superpowers:brainstorming` |
 | `writing-plans` | `superpowers:writing-plans` |
 | `adversarial-review` | `superpowers:adversarial-review` |
 | `requesting-code-review` | `superpowers:requesting-code-review` |
@@ -214,7 +116,7 @@ Some skills in this repo are customizations of existing superpowers skills:
 | `skillkit` | Custom (not in superpowers) |
 | `subagent-driven-development` | `superpowers:subagent-driven-development` |
 | `systematic-debugging` | `superpowers:systematic-debugging` |
-| `releasing` | `superpowers:releasing` |
+| `releasing`                                              | Custom (not in superpowers)               |
 | `code-reviewer` (agent) | `superpowers:code-reviewer` |
 | `bug-hunter` (agent) | Custom (not in superpowers) |
 
@@ -255,4 +157,4 @@ python3 scripts/security_scanner.py <path-to-skill>
 
 ## License
 
-Private—for internal use only.
+WTFPL
