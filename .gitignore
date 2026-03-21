@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+
+# Backup files
+*.backup
+
+# Environment variables
+.env
+
+# Claude Code local settings
+.claude/
+
+# Test directories
+readme-expert-test/
+test/
+test-result/
+test-results/
+test_result/
+
+# plan
+docs/plans/
+docs/superpowers/
+.worktrees/
+worktrees/

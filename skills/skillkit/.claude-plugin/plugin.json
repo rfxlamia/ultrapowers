@@ -1,0 +1,27 @@
+{
+  "name": "skillkit",
+  "description": "Professional skill creation with TDD workflow. Features dual-mode (fast/full), behavioral validation, and automated quality gates for 9.0/10+ scores.",
+  "version": "2.1.5",
+  "author": {
+    "name": "rfxlamia",
+    "email": "rfxlamia@github.com"
+  },
+  "homepage": "https://github.com/rfxlamia/skillkit",
+  "repository": "https://github.com/rfxlamia/skillkit",
+  "license": "Apache-2.0",
+  "keywords": [
+    "skill-creator",
+    "skillkit",
+    "validation",
+    "automation",
+    "quality-assurance",
+    "research-driven",
+    "anti-hallucination",
+    "testing",
+    "security",
+    "token-optimization",
+    "tdd",
+    "behavioral-testing",
+    "pressure-testing"
+  ]
+}
