@@ -106,7 +106,7 @@ Some skills in this repo are customizations of existing superpowers skills:
 |-------------------|---------------------|
 | `brainstorming` (enhanced with identify hypothese phase) | `superpowers:brainstorming` |
 | `writing-plans` | `superpowers:writing-plans` |
-| `adversarial-review` | `superpowers:adversarial-review` |
+| `adversarial-review`                                     | Custom (not in superpowers)               |
 | `requesting-code-review` | `superpowers:requesting-code-review` |
 | `quick-iteration` | Custom (not in superpowers) |
 | `skillkit` | Custom (not in superpowers) |
