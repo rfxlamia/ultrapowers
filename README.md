@@ -4,19 +4,19 @@ I found [superpowers](https://github.com/obra/superpowers) sometime last year. A
 
 The idea is simple: give Claude a set of structured skills — brainstorm before you code, write a real plan before you touch anything, review your own work like you hate it — and suddenly the whole "AI coding assistant" thing stops feeling like autocomplete on steroids and starts feeling like an actual workflow. I liked that. I still like that.
 
-But.
+**But.**
 
-Superpowers is a framework. A general one. And general things have this annoying habit of not fitting your specific situation.
+Superpowers is a framework. A general one. And **general things have this annoying habit of not fitting your specific situation.**
 
-The brainstorming skill was close to what I wanted, but it was missing something specific. When you're doing novel work — translating between languages, implementing an unfamiliar algorithm, designing a custom protocol — there's a class of assumptions that will silently wreck your implementation if you don't surface them early. Superpowers didn't have a step for that. My version adds a novelty detection phase: if the task is uncertain enough, you generate explicit IF...THEN hypotheses for the riskiest assumptions before writing the design. Small addition, but it catches a different category of mistake than clarifying questions do.
+The brainstorming skill was close to what I wanted, but it was missing something specific. When you're doing novel work like translating between languages, implementing an unfamiliar algorithm, designing a custom protocol — **there's a class of assumptions that will silently wreck your implementation** if you don't surface them early. Superpowers didn't have a step for that. My version adds a novelty detection phase: if the task is uncertain enough, you generate explicit IF...THEN hypotheses for the riskiest assumptions before writing the design. Small addition, but it catches a different category of mistake than clarifying questions do.
 
-I also cut the visual companion (token-heavy, not worth it) and the automated spec review loop. Simpler.
+I also cut the visual companion (token-heavy, not worth it) and the automated spec review loop. **Simpler.**
 
-The code review flow existed, but I wanted something more adversarial. Not "here are some suggestions" — I wanted the reviewer to actually try to tear the work apart. Find the thing I missed. Be uncomfortable about it.
+The code review flow existed, but I wanted something more adversarial. Not "here are some suggestions" — I wanted the reviewer to actually try to tear the work apart. Find the thing I missed. **Be uncomfortable about it.**
 
-And quick iteration? That didn't exist at all. Sometimes you just need to fix one thing. You don't want to brainstorm for 20 minutes, write a spec, create a whole plan, and *then* change three lines. You want to do the thing, have someone briefly sanity-check the plan, and move on.
+And quick iteration? That didn't exist at all. Sometimes you just need to fix one thing. You don't want to brainstorm for 20 minutes, write a spec, create a whole plan, and *then* change three lines. **You want to do the thing, have someone briefly sanity-check the plan, and move on.**
 
-So I built Ultrapowers. It's not a replacement — most of it is still fundamentally superpowers, just tuned. What I added were the gaps.
+So I built Ultrapowers. It's not a replacement — most of **it is still fundamentally superpowers, just tuned**. What I added were the gaps.
 
 Feel free to use it. Adapt it. The whole point is that these things should fit how *you* work.
 
