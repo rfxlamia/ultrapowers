@@ -1,155 +1,120 @@
 # Ultrapowers
 
-Customized workflow skills and agents for my development using [superpowers](https://github.com/obra/superpowers) but tailored specifically for **my** use case. You can use it freely btw.
+I found [superpowers](https://github.com/obra/superpowers) sometime last year. And honestly? It clicked immediately.
 
-## Overview
+The idea is simple: give Claude a set of structured skills — brainstorm before you code, write a real plan before you touch anything, review your own work like you hate it — and suddenly the whole "AI coding assistant" thing stops feeling like autocomplete on steroids and starts feeling like an actual workflow. I liked that. I still like that.
 
-This repo contains skills and agents that support end-to-end development workflows, from feature brainstorming through code review and deployment. These are customizations of Claude Code's superpowers, adapted for specific use cases in this project.
+But.
+
+Superpowers is a framework. A general one. And general things have this annoying habit of not fitting your specific situation.
+
+The brainstorming skill was close to what I wanted, but it was missing something specific. When you're doing novel work — translating between languages, implementing an unfamiliar algorithm, designing a custom protocol — there's a class of assumptions that will silently wreck your implementation if you don't surface them early. Superpowers didn't have a step for that. My version adds a novelty detection phase: if the task is uncertain enough, you generate explicit IF...THEN hypotheses for the riskiest assumptions before writing the design. Small addition, but it catches a different category of mistake than clarifying questions do.
+
+I also cut the visual companion (token-heavy, not worth it) and the automated spec review loop. Simpler.
+
+The code review flow existed, but I wanted something more adversarial. Not "here are some suggestions" — I wanted the reviewer to actually try to tear the work apart. Find the thing I missed. Be uncomfortable about it.
+
+And quick iteration? That didn't exist at all. Sometimes you just need to fix one thing. You don't want to brainstorm for 20 minutes, write a spec, create a whole plan, and *then* change three lines. You want to do the thing, have someone briefly sanity-check the plan, and move on.
+
+So I built Ultrapowers. It's not a replacement — most of it is still fundamentally superpowers, just tuned. What I added were the gaps.
+
+Feel free to use it. Adapt it. The whole point is that these things should fit how *you* work.
+
+---
 
 ## Skills
 
-| Skill | Purpose |
-|-------|---------|
-| `brainstorming` | Explore ideas into designs/specs before implementation. Mandatory before any creative work. |
-| `writing-plans` | Create implementation plan from approved spec. |
-| `adversarial-review` | Rigorous, detailed review—essentially being adversarial toward your own work. |
-| `requesting-code-review` | Request code review using the `code-reviewer.md` agent. |
-| `quick-iteration` | Quick fix/quick feat without lengthy planning. Still has plan + subagent review gates. |
-| `skillkit` | Create customizable skills—includes tools and scripts for creation, validation, and security scanning. |
-| `subagent-driven-development` | Execute plans by dispatching subagents per task, with two-stage review (spec compliance + code quality). |
-| `systematic-debugging` | Systematic debugging—must find root cause before proposing fixes. Used with the `bug-hunter.md` agent. |
-| `releasing` | Automate full release workflow: version bumping, changelog generation, git tagging, pushing, and GitHub release creation. |
+| Skill | What it does |
+|-------|-------------|
+| `brainstorming` | Explore ideas before implementing. For novel/uncertain tasks, generates testable IF...THEN hypotheses for risky assumptions before writing the design. Mandatory before any creative work. |
+| `writing-plans` | Convert an approved design into a real implementation plan. |
+| `validate-plan` | Validate implementation plans against DRY, YAGNI, TDD principles — catches over-engineering before you start coding. |
+| `adversarial-review` | Rigorous self-critique. Not polite feedback — it tries to tear the work apart. |
+| `requesting-code-review` | Kicks off review using the `code-reviewer` agent. |
+| `quick-iteration` | For small changes that don't need a full ceremony. Still has a plan + subagent review gate. |
+| `skillkit` | Tools for creating *great* skills. |
+| `subagent-driven-development` | Execute plans by dispatching subagents per task, with two-stage review. |
+| `systematic-debugging` | Forces you to find root cause before proposing a fix. Works with the `bug-hunter` agent. |
+| `releasing` | Full release workflow: version bump, changelog, git tag, push, GitHub release. |
 
 ## Agents
 
-| Agent | Purpose |
-|-------|---------|
-| `code-reviewer` | Senior code reviewer—reviews implementation against original plan, checks code quality, architecture, and best practices. |
-| `bug-hunter` | Debugging specialist—systematically finds root cause before fixing. |
+| Agent | What it does |
+|-------|-------------|
+| `code-reviewer` | Senior reviewer — checks implementation against plan, architecture, and best practices. |
+| `bug-hunter` | Debugging specialist. Finds root cause first, fixes second. |
 
-## Main Workflows
+---
 
-### Full Workflow (For new features / complex systems)
+## Workflows
 
-```
-brainstorming → writing-plans → subagent-driven-development → requesting-code-review → finishing-a-development-branch
-```
+### When you need a real plan (4+ tasks, anything non-trivial)
 
-1. **brainstorming** - Explore ideas, clarify requirements, create design, get user approval
-2. **writing-plans** - Convert design into detailed implementation plan
-3. **subagent-driven-development** - Execute plan task-by-task with reviews
-4. **requesting-code-review** - Final review before merge
-5. **finishing-a-development-branch** - Decide how to integrate to main
+Design first. Context is cheap before you write code. Expensive after.
 
-### Quick Workflow (For small fixes)
+1. **brainstorming** — Figure out what you're actually building. Run `adversarial-review` on the spec that comes out. Kill bad assumptions now.
+2. **writing-plans** — Turn the approved spec into a step-by-step implementation plan.
+3. **Exit. Open a fresh chat.** Run `validate-plan` on the plan. Fix or consciously skip every issue it finds. Don't carry stale context into implementation.
+4. **Exit again. Fresh chat.** Start implementing with `executing-plans` + `using-git-worktrees` — isolated branch, clean slate.
+5. **requesting-code-review** — Review per batch of ~3 tasks, not all at once. Smaller batches, better feedback.
+6. **finishing-a-development-branch** — Merge the worktree back into main when review passes.
+7. **releasing** — Version bump, changelog, tag, push, GitHub release.
 
-```
-quick-iteration → requesting-code-review
-```
+The context resets between steps 2→3 and 3→4 are intentional. **A fresh context catches things a tired one misses.**
 
-1. **quick-iteration** - Brief plan (3-5 bullets) + subagent review, then implement
-2. **requesting-code-review** - Review before commit
+---
 
-### Debugging Workflow
+### When you need a quick fix or fast feature
 
-```
-systematic-debugging → bug-hunter agent → (return to relevant workflow)
-```
+**Just use `quick-iteration`.**
 
-1. **systematic-debugging** - Investigate root cause first
-2. **bug-hunter** - Specialist agent to help with debugging
-3. Once fix is ready, return to appropriate workflow (quick-iteration or full)
+It's not cowboy coding — there's still a brief plan (3–5 bullets) and a mandatory subagent review before you touch anything. But there's no spec, no ceremony, no worktree. Write the bullets, let the reviewer sanity-check them, implement. That's it.
+
+Rule of thumb: if you can describe the change in 5 bullets and it doesn't touch architecture, `quick-iteration` is the right tool.
+
+---
+
+### When something is broken
+
+Run `systematic-debugging` first. Not after you've already tried three things. First.
+
+Once you have a hypothesis worth testing, ask the main agent to spawn a `bug-hunter` subagent. It specializes in finding root cause without jumping to fixes. When the root cause is confirmed, return to `quick-iteration` or the full workflow depending on how deep the fix goes.
+
+---
 
 ## Usage
 
-### Invoking Skills
+Skills are invoked via Claude Code's Skill tool, or directly:
 
 ```bash
-# Direct from Claude Code
 /brainstorming
 /writing-plans
 /quick-iteration
+/etc..
 ```
 
-Or via the Skill tool:
+Claude will also detect relevant skills automatically based on context — you don't always have to invoke them manually.
 
-```
-[Agent] will detect relevant skills and invoke them automatically.
-```
+---
 
-### Using the Workflows
+## What's different from superpowers
 
-**For new features:**
-1. Simply describe the feature you want to build
-- Agent will automatically invoke `brainstorming` skill
-- Follow the process until design is approved
-- Continue to `writing-plans`
-- Execute with `subagent-driven-development`
-
-**For quick fixes:**
-1. Describe the fix needed
-- Agent will invoke `quick-iteration` if appropriate
-- Plan (3-5 bullets) will be reviewed by a subagent
-- Once approved, implement directly
-
-**For debugging:**
-1. Share the error or bug encountered
-- Agent will invoke `systematic-debugging`
-- Find root cause first
-- Then propose fix
-
-## Superpowers Integration
-
-Some skills in this repo are customizations of existing superpowers skills:
-
-| Ultrapowers Skill | Original Superpowers |
-|-------------------|---------------------|
-| `brainstorming` (enhanced with identify hypothese phase) | `superpowers:brainstorming` |
+| Ultrapowers | Original |
+|-------------|----------|
+| `brainstorming` | `superpowers:brainstorming` |
 | `writing-plans` | `superpowers:writing-plans` |
-| `adversarial-review`                                     | Custom (not in superpowers)               |
+| `validate-plan` | Custom |
+| `adversarial-review` | Custom |
 | `requesting-code-review` | `superpowers:requesting-code-review` |
-| `quick-iteration` | Custom (not in superpowers) |
-| `skillkit` | Custom (not in superpowers) |
+| `quick-iteration` | Custom |
+| `skillkit` | Custom |
 | `subagent-driven-development` | `superpowers:subagent-driven-development` |
 | `systematic-debugging` | `superpowers:systematic-debugging` |
-| `releasing`                                              | Custom (not in superpowers)               |
+| `releasing` | Custom |
 | `code-reviewer` (agent) | `superpowers:code-reviewer` |
-| `bug-hunter` (agent) | Custom (not in superpowers) |
+| `bug-hunter` (agent) | Custom |
 
-Differences:
-- **skillkit** - Has scripts and tools for automated skill creation/validation
-- **quick-iteration** - Lightweight alternative for quick changes
-- **bug-hunter** - Specialized debugging agent
-
-## Requirements
-
-- Python 3.12+ (for skillkit scripts)
-- Claude Code with Skill tool
-
-## Development
-
-### Setting up skillkit
-
-```bash
-cd skills/skillkit
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt  # if any
-```
-
-### Validating a skill
-
-```bash
-cd skills/skillkit
-python3 scripts/validate_skill.py <path-to-skill>
-```
-
-### Security scan
-
-```bash
-cd skills/skillkit
-python3 scripts/security_scanner.py <path-to-skill>
-```
+---
 
 ## License
 
