@@ -16,6 +16,8 @@ The code review flow existed, but I wanted something more adversarial. Not "here
 
 And quick iteration? That didn't exist at all. Sometimes you just need to fix one thing. You don't want to brainstorm for 20 minutes, write a spec, create a whole plan, and *then* change three lines. **You want to do the thing, have someone briefly sanity-check the plan, and move on.**
 
+The same thing happened with debugging. Root-cause discipline was necessary, but "debug the current failure" was too narrow for how I actually work. Sometimes the right move is reactive: something is broken, trace it properly. Sometimes it's proactive: a subsystem feels fragile, so go hunt for sibling bugs before they turn into incidents. That grew into `bug-hunting` - the same root-cause-first mindset, but widened to include reconnaissance, blast-radius mapping, evidence classification, and defense-in-depth.
+
 So I built Ultrapowers. It's not a replacement — most of **it is still fundamentally superpowers, just tuned**. What I added were the gaps.
 
 Feel free to use it. Adapt it. The whole point is that these things should fit how *you* work.
@@ -34,7 +36,7 @@ Feel free to use it. Adapt it. The whole point is that these things should fit h
 | `quick-iteration` | For small changes that don't need a full ceremony. Still has a plan + subagent review gate. |
 | `skillkit` | Tools for creating *great* skills. |
 | `subagent-driven-development` | Execute plans by dispatching subagents per task, with two-stage review. |
-| `systematic-debugging` | Forces you to find root cause before proposing a fix. Works with the `bug-hunter` agent. |
+| `bug-hunting` | Reactive debugging and proactive bug audits. Confirms root cause before any fix, maps blast radius, and works with the `bug-hunter` agent. |
 | `releasing` | Full release workflow: version bump, changelog, git tag, push, GitHub release. |
 
 ## Agents
@@ -42,7 +44,7 @@ Feel free to use it. Adapt it. The whole point is that these things should fit h
 | Agent | What it does |
 |-------|-------------|
 | `code-reviewer` | Senior reviewer — checks implementation against plan, architecture, and best practices. |
-| `bug-hunter` | Debugging specialist. Finds root cause first, fixes second. |
+| `bug-hunter` | Investigates active failures and audits risky areas. Finds root cause first, fixes second. |
 
 ---
 
@@ -74,11 +76,13 @@ Rule of thumb: if you can describe the change in 5 bullets and it doesn't touch 
 
 ---
 
-### When something is broken
+### When something is broken or smells risky
 
-Run `systematic-debugging` first. Not after you've already tried three things. First.
+Run `bug-hunting` first. Not after you've already tried three things. First.
 
-Once you have a hypothesis worth testing, ask the main agent to spawn a `bug-hunter` subagent. It specializes in finding root cause without jumping to fixes. When the root cause is confirmed, return to `quick-iteration` or the full workflow depending on how deep the fix goes.
+Use reactive mode when something is actively failing. Use proactive mode when a subsystem feels fragile and you want to surface sibling issues before they bite you in production.
+
+Once you have a confirmed root cause or a prioritized suspect map, ask the main agent to spawn a `bug-hunter` subagent. It specializes in reconnaissance, evidence collection, blast-radius mapping, and root-cause tracing without jumping straight to fixes. When the investigation is complete, return to `quick-iteration` or the full workflow depending on how deep the fix goes.
 
 ---
 
@@ -109,7 +113,7 @@ Claude will also detect relevant skills automatically based on context — you d
 | `quick-iteration` | Custom |
 | `skillkit` | Custom |
 | `subagent-driven-development` | `superpowers:subagent-driven-development` |
-| `systematic-debugging` | `superpowers:systematic-debugging` |
+| `bug-hunting` | Custom evolution of `superpowers:systematic-debugging` |
 | `releasing` | Custom |
 | `code-reviewer` (agent) | `superpowers:code-reviewer` |
 | `bug-hunter` (agent) | Custom |
